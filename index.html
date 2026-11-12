@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aksiya oʻyini</title>
+<meta name="description" content="Xayoliy kompaniya aksiyalarini sotib oling, narxi oshganda soting va reytingda bellashing.">
+<meta property="og:title" content="Aksiya oʻyini">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--tx:#18231d;--mu:#6b7a72;--ac:#16a34a;--rd:#dc2626;--bar:#e3e9e5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1511;--card:#17211b;--tx:#e8f1ec;--mu:#8fa196;--ac:#34d399;--rd:#f87171;--bar:#26332b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1511;--card:#17211b;--tx:#e8f1ec;--mu:#8fa196;--ac:#34d399;--rd:#f87171;--bar:#26332b;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{max-width:480px;margin:0 auto;padding:14px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;padding:11px 4px;border:0;border-radius:12px;background:var(--card);color:var(--tx);font:inherit;font-weight:600;font-size:14px}.tabs{gap:4px}.tabs button{font-size:12.5px;padding:11px 2px}.tabs{flex-wrap:wrap}.tabs button{flex:1 1 30%}
+.tabs button.on{background:var(--ac);color:#fff}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px}
+.card[data-open]{cursor:pointer}
+.mu{color:var(--mu);font-size:13px}
+.n{font-size:36px;font-weight:800;margin:2px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.up{color:var(--ac)}.dn{color:var(--rd)}
+.bt{display:flex;gap:6px;margin-top:10px}
+.bt button,.pb{flex:1;padding:10px 2px;border:0;border-radius:10px;background:var(--ac);color:#fff;font:inherit;font-weight:700;font-size:13px}
+.bt button.s{background:var(--rd)}
+.bt button:disabled{opacity:.4}
+.gift{background:var(--ac);color:#fff}
+.gift button{margin-top:8px;padding:8px 14px;border:0;border-radius:10px;background:#fff;color:#166534;font:inherit;font-weight:700}
+.rs,.bk{background:none;border:0;color:var(--mu);font:inherit;margin:4px 0 8px;padding:6px 0}
+.rs{text-decoration:underline}
+.fi{display:block;width:100%;padding:10px 12px;margin:8px 0;border-radius:10px;border:2px solid var(--bar);background:var(--bg);color:var(--tx);font:inherit}
+.msg{min-height:20px;font-size:14px;margin-top:6px}.ar{padding:10px 0;border-top:1px solid var(--bar);margin-top:8px}
+.pb{display:block;width:100%}
+h4{margin:0 0 2px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="tabs" id="tb"></div>
+<div id="app"></div>
+<div class="mu" style="text-align:center;margin-top:8px">Oʻyin: haqiqiy pul va haqiqiy kompaniyalar emas. Narxlar tasodifiy.</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+var FIREBASE_CONFIG={
+  apiKey:"AIzaSyC2f4ieqUpme8vOhPD-RQ9bI0Ne8N0VIKc",
+  authDomain:"akiya-77a1f.firebaseapp.com",
+  projectId:"akiya-77a1f",
+  appId:"1:893486324089:web:784b8a5c2e9de94f3bb7a8"
+};
+(function(){
+ var PFX="aksiya_";
+ if(!window.firebase)return;
+ try{firebase.initializeApp(FIREBASE_CONFIG)}catch(e){return}
+ var fdb=firebase.firestore();
+ function P(p){return PFX+p}
+ function wrap(s){return {id:s.id,exists:s.exists,data:function(){return s.data()}}}
+ window.claude={use:function(n){
+  if(n==='user')return firebase.auth().signInAnonymously().then(function(c){return {id:function(){return c.user.uid},isOwner:function(){return false}}});
+  if(n==='db')return Promise.resolve({
+   doc:function(p){var r=fdb.doc(P(p));return {
+    get:function(){return r.get().then(wrap)},
+    set:function(d){return r.set(d)},
+    delete:function(){return r.delete()},
+    onSnapshot:function(cb,eb){return r.onSnapshot(function(s){cb(wrap(s))},eb)}
+   }},
+   collection:function(p){var c=fdb.collection(P(p));return {
+    onSnapshot:function(cb,eb){return c.onSnapshot(function(s){cb({docs:s.docs.map(wrap)})},eb)}
+   }}
+  });
+  return Promise.resolve(null);
+ }};
+})();
+</script>
+<script>
+var ST=[
+{t:"QSH",n:"Quyosh Energiya",p:2.4,v:.035,d:.002,c:"QUYOSH"},
+{t:"TZK",n:"Tezkor Yetkazish",p:1.1,v:.06,d:.001,c:"TEZKOR"},
+{t:"ONN",n:"Oltin Non",p:4.8,v:.02,d:.001,c:"NON"},
+{t:"ZMT",n:"Zamon Texno",p:3.2,v:.05,d:.003,c:"ZAMON"},
+{t:"BHR",n:"Bahor Dori",p:.75,v:.08,d:0,c:"BAHOR"},
+{t:"YLQ",n:"Yoʻl Qurilish",p:5.5,v:.03,d:.0015,c:"YOL"},
+{t:"BMW",n:"BMW",p:2500,v:.12,d:0,c:"M5"},
+{t:"MEMC",n:"MemCoin",p:10000,v:.09,d:0,c:"ILON"}
+];
+var SM={};ST.forEach(function(s){SM[s.t]=s});var BASE_ST=ST.slice();
+var MC={BONUS50:50,BOYLIK:500,KATTA:5000};
+var ADMIN_H="816b1923f7e7c5ca33940151eac578f039cc3d3b99202b2779fb22fa60c71c05";
+var DB=null,CFG={codes:{},stocks:[]};
+var ST2={allOff:false,off:[],blocked:[],codes2:[],adOn:true,adVideo:"",adReward:1,adSecs:5,adCool:30,adText:"Homiy reklamasi: bu yerda sizning reklamangiz boʻlishi mumkin!",pulse:null,fx:{}};
+var K="aksiya1",S=null,TAB="w",DET=null,MSG="",down=false,rsT=0;
+function fresh(){var px={},h={};ST.forEach(function(s){px[s.t]=s.p;h[s.t]=[s.p]});return{cash:10,hold:{},px:px,h:h,real:0,t:Date.now(),seen:false,admin:false,used:[],pp:{},custom:{}}}
+try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!S||!S.px)S=fresh();
+S.used=S.used||[];S.pp=S.pp||{};S.custom=S.custom||{};S.cstocks=S.cstocks||[];
+function okSt(s){return s&&typeof s.t==="string"&&/^[A-Z0-9]{2,5}$/.test(s.t)&&typeof s.n==="string"&&/^[\p{L}\p{N} .'ʻ’&-]{1,24}$/u.test(s.n)&&s.p>=.05&&s.v>0&&s.v<=.2&&typeof s.c==="string"&&/^[A-Z0-9]{3,16}$/.test(s.c)}
+function customStocks(){var a=[],seen={};BASE_ST.forEach(function(b){seen[b.t]=1});(CFG.stocks||[]).concat(S.cstocks||[]).forEach(function(s){if(okSt(s)&&!seen[s.t]){seen[s.t]=1;a.push({t:s.t,n:s.n,p:+s.p,v:+s.v,d:0,c:s.c})}});return a}
+function applyStocks(){
+ ST.length=0;BASE_ST.forEach(function(b){ST.push(b)});customStocks().forEach(function(s){ST.push(s)});
+ for(var k in SM)delete SM[k];
+ ST.forEach(function(s){SM[s.t]=s;if(S.px[s.t]===undefined||!S.h[s.t]){S.px[s.t]=s.p;S.h[s.t]=[s.p]}});
+ for(var t in S.hold)if(!SM[t]){S.cash+=S.hold[t].sh*(S.px[t]||0);delete S.hold[t]}
+ for(var q in S.pp)if(!SM[q])delete S.pp[q];
+ if(DET&&!SM[DET])DET=null}
+function newGame(){var nk=S.nick,hd=S.hidden,cn=S.cn,gt=S.got;S=fresh();S.got=gt||[];S.cstocks=[];S.nick=nk;S.hidden=hd;S.cn=cn;applyStocks()}
+function stockList(){var h="";customStocks().forEach(function(s){h+='<span>'+s.n+' ('+s.t+') <button class="rs" data-a="dn" data-t="'+s.t+'" style="margin:0 8px 0 2px">×</button></span> '});return h||"yoʻq"}
+applyStocks();
+function allCodes(){var o={},k;for(k in MC)o[k]=MC[k];for(k in CFG.codes)if(+CFG.codes[k]>0)o[k]=+CFG.codes[k];for(k in S.custom)o[k]=S.custom[k];return o}
+function codeList(){var a=allCodes(),h="";for(var k in a){if(MC[k]!==undefined)continue;h+='<span>'+k+' — $'+a[k]+' <button class="rs" data-a="cd" data-t="'+k+'" style="margin:0 8px 0 2px">×</button></span> '}return h||"yoʻq"}
+function save(){S.t=Date.now();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function rnd(){var u=0;for(var i=0;i<6;i++)u+=Math.random();return(u-3)/Math.sqrt(.5)}
+function step(){ST.forEach(function(s){
+ if(S.pp[s.t]!==undefined||S.px[s.t]===undefined||!S.h[s.t])return;
+ var c=S.px[s.t],bs=(ST2.fx[s.t]&&+ST2.fx[s.t].p>0)?+ST2.fx[s.t].p:s.p,p=c*(1+s.d+s.v*rnd()+.01*(bs/c-1));
+ if(p<.05)p=.05+Math.random()*.05;
+ S.px[s.t]=p;var h=S.h[s.t];h.push(p);if(h.length>40)h.shift()})}
+var n0=Math.min(300,Math.floor((Date.now()-S.t)/4000));for(var i=0;i<n0;i++)step();
+function f(x){return x.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g," ")}
+function sg(x){return(x>=0?"+":"−")+"$"+f(Math.abs(x))}
+function worth(){var v=0;for(var t in S.hold)v+=S.hold[t].sh*S.px[t];return v}
+function spark(a,up,big){
+ var mn=Math.min.apply(0,a),mx=Math.max.apply(0,a),hh=big?60:28,pts=a.map(function(v,i){return(i*100/(a.length-1||1)).toFixed(1)+","+(hh-(v-mn)/((mx-mn)||1)*hh).toFixed(1)}).join(" ");
+ return'<svg viewBox="0 0 100 '+hh+'" '+(big?'width="100%" height="90" preserveAspectRatio="none"':'width="90" height="28"')+'><polyline vector-effect="non-scaling-stroke" fill="none" stroke="'+(up?"var(--ac)":"var(--rd)")+'" stroke-width="2" points="'+pts+'"/></svg>'}
+function tempPrice(t,p,m){
+ if(S.pp[t]!==undefined)return;
+ S.pp[t]=S.px[t];S.px[t]=p;S.h[t].push(p);
+ MSG=m||"Narx $"+f(p)+" boʻldi. 3 soniyada oldingi holatiga qaytadi.";save();render();
+ setTimeout(function(){unpump(t)},3000)}
+function pump(t){
+ if(S.pp[t]!==undefined)return;
+ S.pp[t]=S.px[t];S.px[t]=SM[t].p*5;S.h[t].push(S.px[t]);
+ MSG="🚀 Narx maksimumga chiqdi! 3 soniyada qaytadi. Tezroq soting!";save();render();
+ setTimeout(function(){unpump(t)},3000)}
+function unpump(t){
+ if(S.pp[t]===undefined)return;
+ S.px[t]=S.pp[t];delete S.pp[t];S.h[t].push(S.px[t]);
+ if(DET===t)MSG="Narx oldingi holatiga qaytdi.";save();render()}
+function sha(s){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(function(h){return Array.from(new Uint8Array(h)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")})}
+function wallet(){
+ var v=worth(),tot=S.cash+v,pl=tot-10,h="";
+ if(!S.seen)h+='<div class="card gift"><b>🎁 Xush kelibsiz!</b><div>Sizga <b>$10</b> sovgʻa qilindi. Aksiya sotib oling, narxi oshishini kuting va soting.</div><button data-a="ok">Boshlash</button></div>';
+ h+='<div class="card"><div class="mu">Naqd pul</div><div class="n">$'+f(S.cash)+'</div></div>';
+ h+='<div class="card"><div class="row"><span class="mu">Aksiyalar qiymati</span><b>$'+f(v)+'</b></div><div class="row" style="margin-top:8px"><span class="mu">Jami boylik</span><b>$'+f(tot)+'</b></div><div class="row" style="margin-top:8px"><span class="mu">Umumiy foyda / zarar</span><b class="'+(pl>=0?"up":"dn")+'">'+sg(pl)+'</b></div><div class="row" style="margin-top:8px"><span class="mu">Sotishdan olingan foyda</span><b class="'+(S.real>=0?"up":"dn")+'">'+sg(S.real)+'</b></div></div>';
+ return h+'<div style="text-align:center"><button class="rs" data-a="rs">'+(Date.now()-rsT<4000?"Aniqmi? Yana bosing":"Boshidan boshlash")+'</button></div>'}
+function market(){
+ return ST.map(function(s){
+  var h=S.h[s.t],p=S.px[s.t],ch=p/h[0]-1,up=ch>=0,H=S.hold[s.t],d=S.cash<.01?" disabled":"";
+  return'<div class="card" data-open="'+s.t+'"><div class="row"><div><b>'+s.n+'</b><div class="mu">'+s.t+' • sizda: '+(H?H.sh.toFixed(3):"0")+' ta</div></div>'+spark(h,up)+'</div><div class="row" style="margin-top:6px"><span style="font-size:22px;font-weight:800">$'+f(p)+'</span><b class="'+(up?"up":"dn")+'">'+(up?"▲ +":"▼ ")+(ch*100).toFixed(1)+'%</b></div><div class="bt"><button data-a="b" data-t="'+s.t+'" data-v="1"'+d+'>$1</button><button data-a="b" data-t="'+s.t+'" data-v="5"'+d+'>$5</button><button data-a="b" data-t="'+s.t+'" data-v="0"'+d+'>Hammasi</button></div></div>'}).join("")}
+function port(){
+ var k=Object.keys(S.hold),h="";
+ h+=k.length?k.map(function(t){
+  var H=S.hold[t],val=H.sh*S.px[t],pl=val-H.cost;
+  return'<div class="card" data-open="'+t+'"><div class="row"><div><b>'+SM[t].n+'</b><div class="mu">'+t+' • '+H.sh.toFixed(3)+' ta</div></div><b>$'+f(val)+'</b></div><div class="row mu" style="margin-top:6px"><span>Sotib olingan: $'+f(H.cost)+'</span><b class="'+(pl>=0?"up":"dn")+'">'+sg(pl)+'</b></div><div class="bt"><button class="s" data-a="s" data-t="'+t+'" data-f=".5">Yarmini sot</button><button class="s" data-a="s" data-t="'+t+'" data-f="1">Hammasini sot</button></div></div>'}).join(""):'<div class="card mu" style="text-align:center">Hozircha aksiyangiz yoʻq. Bozor boʻlimidan sotib oling.</div>';
+ h+=lbHtml();
+ h+='<div class="card"><h4>🎟 Promokod</h4><div class="mu">Pul yoki admin huquqini beradi</div><input class="fi" id="pi" placeholder="Promokodni kiriting" autocomplete="off" autocapitalize="characters"><button class="pb" data-a="pc">Qoʻllash</button><div class="msg">'+MSG+'</div></div>';
+ if(S.admin){
+  h+='<div class="card"><h4>👑 Admin panel</h4>'+adminPlayers()+'<input class="fi" id="am" type="text" autocomplete="off" placeholder="Qancha pul qoʻshish (masalan: 100k, 2.5m)"><button class="pb" data-a="am">Pul qoʻshish</button><select class="fi" id="as">'+ST.map(function(s){return'<option value="'+s.t+'">'+s.n+'</option>'}).join("")+'</select><input class="fi" id="ap" type="text" autocomplete="off" placeholder="Yangi narx $ (masalan: 50 yoki 2k)"><button class="pb" data-a="ap">3 soniyaga (hamma uchun)</button><button class="pb" style="margin-top:6px" data-a="af">Butun umrga (hamma uchun)</button><button class="pb" style="margin-top:6px;background:var(--rd)" data-a="ar2">Asl narxga qaytarish</button>'+adminSettings()+adminAccess()+'<h4 style="margin-top:12px">Yangi promokod</h4><input class="fi" id="cn" maxlength="16" placeholder="Kod nomi (masalan: DOST100)" autocapitalize="characters"><input class="fi" id="ca" type="text" autocomplete="off" placeholder="Necha dollar beradi (masalan: 500, 10k)"><button class="pb" data-a="cn">Promokod qoʻshish</button><div class="mu" style="margin-top:8px">Qoʻshilgan kodlar: '+codeList()+'</div><h4 style="margin-top:12px">Yangi aksiya</h4><input class="fi" id="sn" maxlength="24" placeholder="Kompaniya nomi"><input class="fi" id="st" maxlength="5" placeholder="Belgi (2–5 harf, masalan: ABC)" autocapitalize="characters"><input class="fi" id="sp" type="text" autocomplete="off" placeholder="Boshlangʻich narx $ (masalan: 2.5)"><select class="fi" id="sv"><option value="0.02">Sekin oʻzgaradi</option><option value="0.04" selected>Oʻrtacha</option><option value="0.08">Tez oʻzgaradi</option></select><input class="fi" id="sk" maxlength="16" placeholder="Aksiya promokodi (boʻsh = belgi)" autocapitalize="characters"><button class="pb" data-a="an">Aksiya qoʻshish</button><div class="mu" style="margin-top:8px">Qoʻshilgan aksiyalar: '+stockList()+'</div><div class="mu" style="margin-top:10px">Aksiya kodlari: '+ST.map(function(s){return s.t+" — "+s.c}).join(", ")+'</div><div class="bt"><button class="s" data-a="ar">Kodlarni tiklash</button><button class="s" data-a="ax">Admindan chiqish</button></div></div>'}
+ return h}
+function detail(t){
+ var s=SM[t],h=S.h[t],p=S.px[t],ch=p/h[0]-1,up=ch>=0,H=S.hold[t],sh=H?H.sh:0,d=S.cash<.01?" disabled":"",ds=sh<1e-6?" disabled":"";
+ var o='<button class="bk" data-a="bk">← Orqaga</button>';
+ o+='<div class="card"><div class="row"><div><b style="font-size:18px">'+s.n+'</b><div class="mu">'+t+'</div></div><b class="'+(up?"up":"dn")+'">'+(up?"▲ +":"▼ ")+(ch*100).toFixed(1)+'%</b></div><div class="n">$'+f(p)+'</div>'+spark(h,up,true)+'<div class="mu">Maksimum narx: $'+f(s.p*5)+'</div></div>';
+ o+='<div class="card"><div class="mu">Sizda bor</div><div class="n" style="font-size:32px">'+sh.toFixed(3)+' ta aksiya</div>'+(H?'<div class="row mu"><span>Qiymati: $'+f(sh*p)+' • olingan: $'+f(H.cost)+'</span><b class="'+(sh*p-H.cost>=0?"up":"dn")+'">'+sg(sh*p-H.cost)+'</b></div>':'<div class="mu">Hali sotib olmagansiz</div>')+'</div>';
+ o+='<div class="card"><div class="mu">Naqd pul: $'+f(S.cash)+'</div><div class="bt"><button data-a="b" data-t="'+t+'" data-v="1"'+d+'>$1</button><button data-a="b" data-t="'+t+'" data-v="5"'+d+'>$5</button><button data-a="b" data-t="'+t+'" data-v="0"'+d+'>Hammasi</button></div><div class="bt"><button class="s" data-a="s" data-t="'+t+'" data-f=".5"'+ds+'>Yarmini sot</button><button class="s" data-a="s" data-t="'+t+'" data-f="1"'+ds+'>Hammasini sot</button></div></div>';
+ o+='<div class="card"><h4>🎟 Aksiya promokodi</h4><div class="mu">Narxni 3 soniyaga maksimumga chiqaradi</div><input class="fi" id="si" placeholder="Promokodni kiriting" autocomplete="off" autocapitalize="characters"><button class="pb" data-a="sc" data-t="'+t+'">Qoʻllash</button><div class="msg">'+MSG+'</div></div>';
+if(S.admin)o+='<div class="card"><h4>👑 Admin: narx</h4><div class="mu">Narxni 3 soniyaga oʻzgartiradi</div><input class="fi" id="dp" type="text" autocomplete="off" placeholder="Narx $ (masalan: 50 yoki 2k)"><button class="pb" data-a="dp" data-t="'+t+'">3 soniyaga (hamma uchun)</button><button class="pb" style="margin-top:6px" data-a="df" data-t="'+t+'">Butun umrga (hamma uchun)</button><button class="pb" style="margin-top:6px;background:var(--rd)" data-a="dr" data-t="'+t+'">Asl narxga qaytarish</button></div>';
+ return o}
+function render(){
+ if(AD&&TAB==="a"&&!DET&&document.getElementById("adc"))return;
+ var T=[["w","💵 Hamyon"],["m","📈 Bozor"],["p","💼 Portfel"],["g","🎁 Gift"],["a","📺 Reklama"]];
+ document.getElementById("tb").innerHTML=T.map(function(x){return'<button data-a="tab" data-t="'+x[0]+'" class="'+(TAB===x[0]&&!DET?"on":"")+'">'+x[1]+'</button>'}).join("");
+ document.getElementById("app").innerHTML=DET?detail(DET):TAB==="w"?wallet():TAB==="m"?market():TAB==="g"?giftView():TAB==="a"?adView():port()}
+function addCode(n,v){
+ if(!/^[A-Z0-9]{3,16}$/.test(n)||n==="BOSHIDAN"||!(v>0)||v>1e6){MSG="Kod 3–16 ta harf yoki raqam, miqdor 0 dan katta boʻlsin.";render();return}
+ v=Math.floor(v);var codes=Object.assign({},CFG.codes);codes[n]=v;
+ if(DB){DB.doc("config/promos").set({codes:codes}).then(function(){MSG="Qoʻshildi: "+n+" (+$"+v+"). Hamma oʻyinchida ishlaydi."}).catch(function(){S.custom[n]=v;MSG="Faqat shu telefonda saqlandi: "+n;save()}).then(render)}
+ else{S.custom[n]=v;MSG="Qoʻshildi: "+n+" (+$"+v+"). Faqat shu telefonda ishlaydi.";save();render()}
+}
+function delCode(n){
+ delete S.custom[n];var codes=Object.assign({},CFG.codes);
+ if(codes[n]!==undefined&&DB){delete codes[n];DB.doc("config/promos").set({codes:codes}).catch(function(){})}
+ save();render()}
+function parseAmt(s){s=String(s).trim().toLowerCase().replace(/[\s,$_]/g,"");var m=/^(\d*\.?\d+)([kmbt]?)$/.exec(s);if(!m)return NaN;var u={"":1,k:1e3,m:1e6,b:1e9,t:1e12};return parseFloat(m[1])*u[m[2]]}
+function addStock(n,t,p,v,c){
+ n=n.trim();t=t.toUpperCase();c=(c||t).toUpperCase();
+ var s={t:t,n:n,p:p,v:v,d:0,c:c};
+ if(!okSt(s)||c==="BOSHIDAN"||SM[t]){MSG="Nom, 2–5 harfli belgi, narx ($0.05 dan) va kodni toʻgʻri yozing. Belgi band boʻlmasin.";render();return}
+ var list=CFG.stocks.concat([s]);
+ if(DB){DB.doc("config/stocks").set({list:list}).then(function(){MSG="Qoʻshildi: "+n+". Hamma oʻyinchida chiqadi."}).catch(function(){S.cstocks.push(s);applyStocks();MSG="Faqat shu telefonda saqlandi: "+n;save()}).then(render)}
+ else{S.cstocks.push(s);applyStocks();MSG="Qoʻshildi: "+n+". Faqat shu telefonda chiqadi.";save();render()}
+}
+function delStock(t){
+ S.cstocks=S.cstocks.filter(function(s){return s.t!==t});
+ var list=CFG.stocks.filter(function(s){return s.t!==t});
+ if(list.length!==CFG.stocks.length&&DB)DB.doc("config/stocks").set({list:list}).catch(function(){});
+ applyStocks();save();render()}
+var LP=[],AL=[],UID=null,lastP="";
+function esc(s){return String(s).replace(/[&<>"'`]/g,function(c){return"&#"+c.charCodeAt(0)+";"})}
+function pushNow(force){
+ if(!DB||!UID||!S.nick||S.hidden)return;
+ var d={nick:S.nick,worth:Math.floor(S.cash+worth())},j=JSON.stringify(d);
+ if(j===lastP&&!force)return;lastP=j;
+ DB.doc("players/"+UID).set(d).catch(function(){lastP=""})}
+function lbHtml(){
+ var h='<div class="card"><h4>🏆 Reyting</h4>';
+ if(!DB||!UID)return h+'<div class="mu">Reyting uchun internetga ulanish kerak.</div></div>';
+ h+='<div class="mu">'+(S.nick?"Boylik = naqd pul + aksiyalar qiymati":"Reytingda koʻrinish uchun ismingizni yozing")+'</div><input class="fi" id="nk" maxlength="16" placeholder="Ismingiz" value="'+esc(S.nick||"")+'"><button class="pb" data-a="nk">Ismni saqlash</button>';
+ var M=["🥇","🥈","🥉"],L=LP.filter(function(p){return typeof p.nick==="string"&&p.nick}).sort(function(a,b){return(b.worth||0)-(a.worth||0)});
+ h+=L.length?L.map(function(p,i){
+  var id=esc(p.id),r='<div class="ar"><div class="row"><b>'+(M[i]||(i+1)+".")+' '+esc(p.nick)+(p.id===UID?" (siz)":"")+'</b><b>$'+f(+p.worth||0)+'</b></div>';
+  if(S.admin)r+='<input class="fi" placeholder="miqdor (100, 5k)" autocomplete="off"><div class="bt"><button data-a="lc" data-k="add" data-t="'+id+'">+</button><button class="s" data-a="lc" data-k="sub" data-t="'+id+'">−</button><button data-a="lc" data-k="set" data-t="'+id+'">Qoʻy</button><button class="s" data-a="lc" data-k="zero" data-t="'+id+'">0</button><button class="s" data-a="lc" data-k="hide" data-t="'+id+'">✕</button></div>';
+  return r+'</div>'}).join(""):'<div class="mu" style="margin-top:8px">Hozircha hech kim yoʻq.</div>';
+ return h+'</div>'}
+function lcmd(b){
+ var r=b.closest(".ar"),id=b.dataset.t==="sel"?r.querySelector("select").value:b.dataset.t,k=b.dataset.k,i=r.querySelector("input"),v=(k==="zero"||k==="hide")?0:parseAmt(i.value);
+ if(!DB||isNaN(v)||((k==="add"||k==="sub")&&!(v>0))){MSG="Miqdorni yozing (masalan: 100, 5k).";render();return}
+ var c={n:Date.now()+"-"+Math.random().toString(36).slice(2)};
+ if(k==="add")c.add=v;else if(k==="sub")c.add=-v;else if(k==="set"||k==="zero")c.set=v;else c.hide=1;
+ DB.doc("cmds/"+id).set(c).then(function(){if(k==="hide")return DB.doc("players/"+id).delete()}).then(function(){MSG="Yuborildi ✅";render()}).catch(function(e){MSG="Xato: "+((e&&(e.code||e.message))||"ruxsat yoʻq");render()});
+ i.value=""}
+var SEL="",GSEL="";
+document.addEventListener("change",function(e){if(e.target.id==="ps")SEL=e.target.value;if(e.target.id==="gt")GSEL=e.target.value});
+function players(skip){return LP.filter(function(p){return typeof p.nick==="string"&&p.nick&&p.id!==skip}).sort(function(a,b){return(b.worth||0)-(a.worth||0)})}
+function adminPlayers(){
+ var h='<h4 style="margin-top:6px">Reyting: pul boshqaruvi</h4>';
+ if(!DB||!UID)return h+'<div class="mu">internetga ulanish kerak.</div>';
+ var L=players(null);if(!L.length)return h+'<div class="mu">Hozircha reytingda hech kim yoʻq.</div>';
+ var b=function(k,c,t){return'<button'+(c?' class="s"':'')+' data-a="lc" data-k="'+k+'" data-t="sel">'+t+'</button>'};
+ return h+'<div class="ar" style="border:0;margin:0;padding:0"><select class="fi" id="ps">'+L.map(function(p){return'<option value="'+esc(p.id)+'"'+(p.id===SEL?" selected":"")+'>'+esc(p.nick)+' — $'+f(+p.worth||0)+'</option>'}).join("")+'</select><input class="fi" placeholder="miqdor (100, 5k)" autocomplete="off"><div class="bt">'+b("add",0,"+ Qoʻsh")+b("sub",1,"− Ayir")+b("set",0,"Qoʻy")+b("zero",1,"0")+b("hide",1,"✕")+'</div></div>'}
+function giftView(){
+ S.inbox=S.inbox||[];
+ var h='<div class="card"><h4>🎁 Gift</h4><div class="mu">Boshqa oʻyinchiga pul yuboring</div><div class="n" style="font-size:28px">$'+f(S.cash)+'</div><div class="mu">Naqd pulingiz</div>';
+ if(!DB||!UID)return h+'<div class="mu" style="margin-top:8px">Gift uchun internetga ulanish kerak.</div></div>';
+ if(!S.nick)return h+'<div class="mu" style="margin-top:8px">Avval Portfeldagi Reyting kartasida ismingizni saqlang.</div></div>';
+ var L=players(UID);
+ if(!L.length)h+='<div class="mu" style="margin-top:8px">Hozircha boshqa oʻyinchi yoʻq.</div></div>';
+ else h+='<select class="fi" id="gt">'+L.map(function(p){return'<option value="'+esc(p.id)+'"'+(p.id===GSEL?" selected":"")+'>'+esc(p.nick)+'</option>'}).join("")+'</select><input class="fi" id="ga" placeholder="Miqdor (masalan: 5, 1k)" autocomplete="off"><button class="pb" data-a="gs">Yuborish</button><div class="msg">'+MSG+'</div></div>';
+ h+='<div class="card"><h4>Olingan sovgʻalar</h4>'+(S.inbox.length?S.inbox.map(function(x){return'<div class="row" style="margin-top:6px"><span>🎁 '+esc(x.w)+'</span><b class="up">+$'+f(x.a)+'</b></div>'}).join(""):'<div class="mu">Hozircha yoʻq.</div>')+'</div>';
+ return h}
+function gsend(){
+ var to=val("gt"),a=parseAmt(val("ga"));
+ if(!DB||!UID||!S.nick||!to||to===UID)return;
+ if(!(a>=.01)||a>1e12){MSG="Miqdorni toʻgʻri yozing (masalan: 5, 1k).";render();return}
+ a=Math.round(a*100)/100;
+ if(a>S.cash+1e-9){MSG="Naqd pulingiz yetmaydi.";render();return}
+ S.cash=Math.max(0,S.cash-a);save();pushNow(true);
+ var gid=to+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+ DB.doc("gifts/"+gid).set({to:to,from:UID,fn:S.nick,a:a}).then(function(){MSG="Yuborildi ✅ $"+f(a);render()}).catch(function(){S.cash+=a;save();MSG="Yuborib boʻlmadi, pul qaytarildi.";render()});
+ render()}
+function isOff(c){return ST2.allOff||ST2.off.indexOf(c)>=0}
+function normCfg(x){
+ var o=Object.assign({allOff:false,off:[],blocked:[],codes2:[],adOn:true,adVideo:"",adReward:1,adSecs:5,adCool:30,adText:"Homiy reklamasi: bu yerda sizning reklamangiz boʻlishi mumkin!",pulse:null,fx:{}},x||{});
+ if(!Array.isArray(o.off))o.off=[];if(!o.fx||typeof o.fx!=="object")o.fx={};
+ o.adReward=Math.max(0,+o.adReward||0);o.adSecs=Math.min(60,Math.max(1,Math.floor(+o.adSecs)||5));o.adCool=Math.max(0,Math.floor(+o.adCool)||0);
+ o.adText=String(o.adText||"").replace(/[<>&"'`]/g,"").slice(0,200);o.adVideo=/^https:\/\/[^\s"'<>]{4,290}$/.test(String(o.adVideo||""))?String(o.adVideo):"";
+ o.blocked=(Array.isArray(o.blocked)?o.blocked:[]).filter(function(h){return/^[0-9a-f]{64}$/.test(h)});
+ o.codes2=(Array.isArray(o.codes2)?o.codes2:[]).filter(function(x){return x&&/^[0-9a-f]{64}$/.test(x.h)}).map(function(x){return{h:x.h,l:String(x.l||"Admin kod").replace(/[<>&"'`]/g,"").slice(0,16)}});return o}
+function applyCfg2(){
+ var pu=ST2.pulse;S.fxs=S.fxs||{};
+ if(pu&&pu.id&&pu.id!==S.pid){S.pid=pu.id;if(Date.now()-(+pu.ts||0)<15000&&SM[pu.t]&&+pu.p>0)tempPrice(pu.t,+pu.p,"💥 Admin "+SM[pu.t].n+" narxini $"+f(+pu.p)+" ga chiqardi! 3 soniyada qaytadi.")}
+ for(var t in ST2.fx){var e=ST2.fx[t];if(e&&e.id&&S.fxs[t]!==e.id&&SM[t]){S.fxs[t]=e.id;var np=+e.p>0?+e.p:SM[t].p;if(S.pp[t]!==undefined)S.pp[t]=np;else{S.px[t]=np;S.h[t].push(np)}}}
+ save()}
+function setCfg(p){
+ ST2=normCfg(Object.assign({},ST2,p));S.cfg2=ST2;save();applyCfg2();
+ if(DB)DB.doc("config/settings").set(ST2).catch(function(){});
+ render()}
+function fxSet(t,p){var fx=Object.assign({},ST2.fx);fx[t]={id:Date.now()+"-"+Math.random().toString(36).slice(2),p:p};setCfg({fx:fx})}
+function pulseSet(t,p){setCfg({pulse:{id:Date.now()+"-"+Math.random().toString(36).slice(2),ts:Date.now(),t:t,p:p}})}
+function adminSettings(){
+ var h='<h4 style="margin-top:12px">⚙️ Promokod boshqaruvi</h4><button class="pb" data-a="po"'+(ST2.allOff?' style="background:var(--rd)"':'')+'>Hamma promokodlar: '+(ST2.allOff?"❌ oʻchirilgan (yoqish)":"✅ yoqilgan (oʻchirish)")+'</button>';
+ var seen={},L=[];Object.keys(allCodes()).concat(ST.map(function(s){return s.c})).forEach(function(c){if(!seen[c]){seen[c]=1;L.push(c)}});
+ h+='<div class="mu" style="margin-top:8px">Alohida kodlar (bosib yoqing yoki oʻchiring):</div><div>'+L.map(function(c){var off=ST2.off.indexOf(c)>=0;return'<button class="pb" style="display:inline-block;width:auto;margin:4px 4px 0 0;padding:7px 10px;'+(off?'background:var(--rd)':'')+'" data-a="co" data-t="'+esc(c)+'">'+esc(c)+(off?" ❌":" ✅")+'</button>'}).join("")+'</div>';
+ h+='<h4 style="margin-top:12px">📺 Reklama sozlamasi</h4><button class="pb" data-a="ao"'+(ST2.adOn?'':' style="background:var(--rd)"')+'>Reklama bo‘limi: '+(ST2.adOn?"✅ yoqilgan (oʻchirish)":"❌ oʻchirilgan (yoqish)")+'</button>';
+ h+='<input class="fi" id="ad_r" type="text" autocomplete="off" placeholder="Mukofot ($)" value="'+ST2.adReward+'"><input class="fi" id="ad_s" type="number" min="1" max="60" placeholder="Reklama davomiyligi (soniya)" value="'+ST2.adSecs+'"><input class="fi" id="ad_c" type="number" min="0" placeholder="Keyingi reklamagacha kutish (soniya)" value="'+ST2.adCool+'"><input class="fi" id="ad_t" maxlength="200" placeholder="Reklama matni" value="'+esc(ST2.adText)+'"><input class="fi" id="ad_v" maxlength="290" placeholder="Video havolasi (YouTube yoki .mp4, https://...)" value="'+esc(ST2.adVideo)+'"><button class="pb" data-a="asv">Reklamani saqlash</button>';
+ return h}
+var AD=null,adIv=null;
+function adMedia(){
+ var u=ST2.adVideo;if(!u)return"";
+ var m=/^https:\/\/(?:www\.)?(?:youtube\.com\/watch\?(?:[^#]*&)?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/.exec(u);
+ if(m)return'<iframe src="https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&mute=1&controls=0&playsinline=1&rel=0" style="width:100%;aspect-ratio:16/9;border:0;border-radius:12px;margin-bottom:10px" allow="autoplay;encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+ return'<video src="'+esc(u)+'" autoplay muted playsinline loop style="width:100%;border-radius:12px;margin-bottom:10px"></video>'}
+function adLeft(){var w=(S.adT||0)+ST2.adCool*1000-Date.now();return w>0?Math.ceil(w/1000):0}
+function adView(){
+ var h='<div class="card"><h4>📺 Reklama</h4>';
+ if(!ST2.adOn)return h+'<div class="mu">Reklama boʻlimi hozir oʻchirilgan.</div></div>';
+ if(AD){var l=Math.max(0,Math.ceil((AD.end-Date.now())/1000));return h+'<div class="mu">Reklama koʻrilmoqda…</div>'+adMedia()+'<div style="margin:12px 0;padding:18px;border-radius:12px;background:var(--bar)"><b>'+esc(ST2.adText)+'</b></div><div class="n" id="adc" style="text-align:center;font-size:30px">'+l+'</div><div class="mu" style="text-align:center">Tugagach $'+f(AD.rw)+' olasiz. Sahifadan chiqmang.</div></div>'}
+ var w=adLeft();
+ return h+'<div class="mu">Reklama koʻring va pul oling</div><div class="n" style="font-size:30px">+$'+f(ST2.adReward)+'</div><div class="mu">'+ST2.adSecs+' soniya davom etadi</div><button class="pb" data-a="adv"'+(w?" disabled":"")+'>'+(w?"Keyingisi: "+w+" soniyadan keyin":"▶ Reklama koʻrish")+'</button><div class="msg">'+MSG+'</div></div>'}
+function adStart(){
+ if(!ST2.adOn||AD||adLeft())return;
+ AD={end:Date.now()+ST2.adSecs*1000,rw:ST2.adReward};MSG="";
+ clearInterval(adIv);adIv=setInterval(adTick,250);render()}
+function adTick(){
+ if(!AD){clearInterval(adIv);return}
+ if(document.hidden){AD=null;clearInterval(adIv);MSG="Reklama bekor qilindi (sahifadan chiqdingiz).";render();return}
+ var l=Math.ceil((AD.end-Date.now())/1000);
+ if(l<=0){S.cash+=AD.rw;S.adT=Date.now();MSG="Reklama koʻrildi! +$"+f(AD.rw);AD=null;clearInterval(adIv);save();pushNow(true);render();return}
+ var e=document.getElementById("adc");if(e)e.textContent=l}
+ST2=normCfg(S.cfg2);
+function tryAdmin(c){
+ sha("ak1:"+c).then(function(h){
+  var ok=h===ADMIN_H||ST2.codes2.some(function(x){return x.h===h});
+  if(!ok){MSG="Bunday promokod yoʻq.";save();render();return}
+  if(ST2.blocked.indexOf(h)>=0){MSG="Bu kod bloklangan.";save();render();return}
+  var go=function(){S.admin=true;MSG="👑 Admin huquqi berildi!";save();render();regAdmin()};
+  if(!DB||!UID){go();return}
+  DB.doc("admins/"+UID).get().then(function(d){if(d.exists&&(d.data()||{}).revoked){MSG="Sizning admin huquqingiz olib tashlangan.";save();render()}else go()}).catch(go)
+ }).catch(function(){MSG="Bunday promokod yoʻq.";render()})}
+function regAdmin(){
+ if(!DB||!UID||!S.admin)return;
+ DB.doc("admins/"+UID).get().then(function(d){
+  if(d.exists&&(d.data()||{}).revoked){S.admin=false;save();render();return}
+  return DB.doc("admins/"+UID).set({nick:S.nick||"",ts:Date.now(),revoked:false})}).catch(function(){})}
+function adminAccess(){
+ var h='<h4 style="margin-top:12px">👥 Adminlar</h4>';
+ if(!DB||!UID)h+='<div class="mu">Adminlar roʻyxati uchun internet kerak.</div>';
+ else h+=AL.length?AL.map(function(x){var me=x.id===UID;return'<div class="row" style="margin-top:6px"><span>'+esc(x.nick||"Nomsiz")+(me?" (siz)":"")+(x.revoked?" • chiqarilgan":"")+'</span>'+(me?'':'<button class="pb" style="width:auto;flex:none;padding:7px 12px;'+(x.revoked?'':'background:var(--rd)')+'" data-a="'+(x.revoked?"au":"ar3")+'" data-t="'+esc(x.id)+'">'+(x.revoked?"Qaytarish":"Chiqarish")+'</button>')+'</div>'}).join(""):'<div class="mu">Hozircha admin yoʻq.</div>';
+ h+='<h4 style="margin-top:12px">🔑 Admin kodlari</h4>';
+ h+=[{h:ADMIN_H,l:"Asosiy kod",m:1}].concat(ST2.codes2).map(function(x){var bl=ST2.blocked.indexOf(x.h)>=0;return'<div class="row" style="margin-top:6px"><span>'+esc(x.l)+(bl?" • bloklangan":"")+'</span><span><button class="pb" style="width:auto;flex:none;padding:7px 12px;'+(bl?'':'background:var(--rd)')+'" data-a="bk1" data-t="'+x.h+'">'+(bl?"Ochish":"Bloklash")+'</button>'+(x.m?'':' <button class="pb" style="width:auto;flex:none;padding:7px 12px;background:var(--rd)" data-a="cdel" data-t="'+x.h+'">×</button>')+'</span></div>'}).join("");
+ h+='<input class="fi" id="nc_c" maxlength="24" placeholder="Yangi admin kodi (6–24 harf/raqam)" autocapitalize="characters" autocomplete="off"><input class="fi" id="nc_l" maxlength="16" placeholder="Kod nomi (kimga berilgani)"><button class="pb" data-a="nca">Admin kodini qoʻshish</button>';
+ return h}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():""}
+function act(e){
+ var b=e.target.closest("button");
+ if(!b){var o=e.target.closest("[data-open]");if(o){DET=o.dataset.open;MSG="";render();window.scrollTo(0,0)}return}
+ var a=b.dataset.a,t=b.dataset.t;
+ if(a==="tab"){if(AD&&t!=="a"){AD=null;clearInterval(adIv);MSG="Reklama bekor qilindi."}else MSG="";TAB=t;DET=null}
+ else if(a==="bk"){DET=null;MSG=""}
+ else if(a==="ok"){S.seen=true}
+ else if(a==="rs"){if(Date.now()-rsT<4000){var ad=S.admin;newGame();S.admin=ad;rsT=0}else rsT=Date.now()}
+ else if(a==="b"){var amt=+b.dataset.v||S.cash;amt=Math.min(amt,S.cash);if(amt<.01)return;
+  var H=S.hold[t]||(S.hold[t]={sh:0,cost:0});H.sh+=amt/S.px[t];H.cost+=amt;S.cash=Math.max(0,S.cash-amt)}
+ else if(a==="s"){var H2=S.hold[t];if(!H2)return;var fr=+b.dataset.f,sh=H2.sh*fr,v=sh*S.px[t],c=H2.cost*fr;
+  S.cash+=v;S.real+=v-c;H2.sh-=sh;H2.cost-=c;if(H2.sh<1e-6||fr===1)delete S.hold[t]}
+ else if(a==="sc"){var c1=val("si").toUpperCase();
+  if(!c1)MSG="Promokodni yozing.";
+  else if(c1==="BOSHIDAN"){newGame();DET=null;TAB="w";MSG="🔄 Hammasi boshidan boshlandi. Admin paneli oʻchdi."}
+  else if(c1!==SM[t].c)MSG="Bunday promokod yoʻq.";
+  else if(isOff(c1))MSG="Bu promokod hozir oʻchirilgan.";
+  else if(S.used.indexOf("s:"+t)>=0)MSG="Bu promokod allaqachon ishlatilgan.";
+  else{S.used.push("s:"+t);pump(t);return}}
+ else if(a==="pc"){var c2=val("pi").toUpperCase();
+  if(!c2)MSG="Promokodni yozing.";
+  else if(c2==="BOSHIDAN"){newGame();MSG="🔄 Hammasi boshidan boshlandi. Admin paneli oʻchdi."}
+  else if(allCodes()[c2]!==undefined){
+   if(isOff(c2))MSG="Bu promokod hozir oʻchirilgan.";
+   else if(S.used.indexOf("m:"+c2)>=0)MSG="Bu promokod allaqachon ishlatilgan.";
+   else{S.used.push("m:"+c2);S.cash+=allCodes()[c2];MSG="Qabul qilindi! +$"+allCodes()[c2]}}
+  else{
+   if(!(window.crypto&&crypto.subtle)){MSG="Bunday promokod yoʻq.";save();render();return}
+   tryAdmin(c2);return}}
+ else if(a==="nk"){var nm=val("nk").replace(/[<>&"'`]/g,"").slice(0,16);if(nm.length<2)MSG="Ism kamida 2 ta belgi boʻlsin.";else{S.nick=nm;MSG="Ism saqlandi ✅";pushNow(true)}}
+ else if(S.admin&&a==="am"){var m=parseAmt(val("am"));if(m>0){S.cash+=m;MSG=""}else MSG="Miqdorni raqam bilan yozing (masalan: 100k, 2.5m).";}
+ else if(S.admin&&a==="ap"){var pt=document.getElementById("as").value,np=parseAmt(val("ap"));if(np>=.05&&SM[pt]){MSG="Narx 3 soniyaga oʻzgardi (hamma uchun) ✅";pulseSet(pt,np);return}else MSG="Narxni toʻgʻri yozing ($0.05 dan)."}
+ else if(S.admin&&a==="af"){var pf=document.getElementById("as").value,nf=parseAmt(val("ap"));if(nf>=.05&&SM[pf]){MSG="Narx butun umrga oʻrnatildi ✅";fxSet(pf,nf);return}else MSG="Narxni toʻgʻri yozing ($0.05 dan)."}
+ else if(S.admin&&a==="ar2"){var pr=document.getElementById("as").value;if(SM[pr]){MSG="Narx asl holiga qaytarildi ✅";fxSet(pr,0);return}}
+ else if(S.admin&&a==="ar3"){var adm=AL.filter(function(x){return x.id===t})[0]||{};MSG="Admin chiqarildi ✅";if(DB)DB.doc("admins/"+t).set({nick:adm.nick||"",ts:adm.ts||Date.now(),revoked:true}).catch(function(){MSG="Xato: chiqarib boʻlmadi.";render()})}
+ else if(S.admin&&a==="au"){var adn=AL.filter(function(x){return x.id===t})[0]||{};MSG="Qaytarildi. U admin kodini qayta kiritishi kerak ✅";if(DB)DB.doc("admins/"+t).set({nick:adn.nick||"",ts:adn.ts||Date.now(),revoked:false}).catch(function(){MSG="Xato.";render()})}
+ else if(S.admin&&a==="bk1"){var bl=ST2.blocked.slice(),bi=bl.indexOf(t);if(bi>=0)bl.splice(bi,1);else bl.push(t);MSG="";setCfg({blocked:bl});return}
+ else if(S.admin&&a==="cdel"){MSG="Admin kodi oʻchirildi.";setCfg({codes2:ST2.codes2.filter(function(x){return x.h!==t}),blocked:ST2.blocked.filter(function(x){return x!==t})});return}
+ else if(S.admin&&a==="nca"){var cc=val("nc_c").toUpperCase(),cl2=val("nc_l").replace(/[<>&"'`]/g,"").slice(0,16)||"Admin kod";
+  if(!/^[A-Z0-9-]{6,24}$/.test(cc)){MSG="Kod 6–24 ta harf, raqam yoki chiziqcha boʻlsin.";render();return}
+  sha("ak1:"+cc).then(function(h){if(h===ADMIN_H||ST2.codes2.some(function(x){return x.h===h})){MSG="Bu kod allaqachon bor.";render();return}MSG="Yangi admin kodi qoʻshildi ✅ Uni yozib qoʻying, keyin koʻrinmaydi.";setCfg({codes2:ST2.codes2.concat([{h:h,l:cl2}])})}).catch(function(){MSG="Xato: kod qoʻshib boʻlmadi.";render()});return}
+ else if(S.admin&&a==="po"){MSG="";setCfg({allOff:!ST2.allOff});return}
+ else if(S.admin&&a==="co"){var ofs=ST2.off.slice(),ix=ofs.indexOf(t);if(ix>=0)ofs.splice(ix,1);else ofs.push(t);MSG="";setCfg({off:ofs});return}
+ else if(S.admin&&a==="ao"){MSG="";setCfg({adOn:!ST2.adOn});return}
+ else if(S.admin&&a==="asv"){var rw=parseAmt(val("ad_r")),sc=Math.floor(+val("ad_s")),cl=Math.floor(+val("ad_c")),tx=val("ad_t").replace(/[<>&"'`]/g,"").slice(0,200);
+  if(!(rw>=0)||!(sc>=1&&sc<=60)||!(cl>=0&&cl<=86400)){MSG="Mukofot, soniya (1–60) va kutish vaqtini toʻgʻri yozing.";render();return}
+  var vd=val("ad_v");if(vd&&!/^https:\/\/[^\s"'<>]{4,290}$/.test(vd)){MSG="Video havolasi https:// bilan boshlansin.";render();return}
+  MSG="Reklama sozlamasi saqlandi ✅";setCfg({adReward:rw,adSecs:sc,adCool:cl,adText:tx||ST2.adText,adVideo:vd});return}
+ else if(a==="adv"){adStart();return}
+ else if(S.admin&&a==="cn"){addCode(val("cn").toUpperCase(),parseAmt(val("ca")));return}
+ else if(S.admin&&a==="cd"){delCode(t);return}
+ else if(S.admin&&a==="lc"){lcmd(b);return}
+ else if(a==="gs"){gsend();return}
+ else if(S.admin&&a==="an"){addStock(val("sn"),val("st"),parseAmt(val("sp")),+val("sv"),val("sk"));return}
+ else if(S.admin&&a==="dn"){delStock(t);return}
+ else if(S.admin&&a==="dp"){var dq=parseAmt(val("dp"));if(dq>=.05&&SM[t]){pulseSet(t,dq);return}else MSG="Narxni toʻgʻri yozing ($0.05 dan)."}
+ else if(S.admin&&a==="df"){var dfq=parseAmt(val("dp"));if(dfq>=.05&&SM[t]){MSG="Narx butun umrga oʻrnatildi ✅";fxSet(t,dfq);return}else MSG="Narxni toʻgʻri yozing ($0.05 dan)."}
+ else if(S.admin&&a==="dr"){if(SM[t]){MSG="Narx asl holiga qaytarildi ✅";fxSet(t,0);return}}
+ else if(S.admin&&a==="ar"){S.used=[]}
+ else if(S.admin&&a==="ax"){S.admin=false}
+ save();render()}
+document.addEventListener("click",act);
+document.addEventListener("pointerdown",function(){down=true});
+document.addEventListener("pointerup",function(){down=false});
+document.addEventListener("pointercancel",function(){down=false});
+setInterval(function(){step();save();var ae=document.activeElement;if(!down&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},4000);
+if(window.claude&&claude.use)claude.use("db").then(function(d){if(!d)return;DB=d;DB.doc("config/stocks").onSnapshot(function(s){var x=s.exists?(s.data()||{}):{};CFG.stocks=Array.isArray(x.list)?x.list.map(function(a){return Object.assign({},a)}):[];applyStocks();var ae=document.activeElement;if(!down&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},function(){});DB.doc("config/settings").onSnapshot(function(s){ST2=normCfg(s.exists?(s.data()||{}):S.cfg2);applyCfg2();var ae=document.activeElement;if(!down&&!AD&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},function(){});DB.doc("config/promos").onSnapshot(function(s){var x=s.exists?(s.data()||{}):{};CFG.codes=x.codes&&typeof x.codes==="object"?Object.assign({},x.codes):{};var ae=document.activeElement;if(!down&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},function(){})}).catch(function(){});
+if(window.claude&&claude.use)Promise.all([claude.use("db"),claude.use("user")]).then(function(r){
+ var d=r[0],U=r[1];if(!d||!U)return;
+ return Promise.resolve(U.id()).then(function(id){
+  DB=d;UID=id;
+  DB.collection("players").onSnapshot(function(s){LP=s.docs.map(function(q){var x=Object.assign({},q.data()||{});x.id=q.id;return x});var ae=document.activeElement;if(!down&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},function(){});
+  DB.doc("cmds/"+UID).onSnapshot(function(s){
+   if(!s.exists)return;var d2=s.data()||{};if(!d2.n||d2.n===S.cn)return;S.cn=d2.n;
+   if(d2.hide)S.hidden=true;
+   else if(typeof d2.add==="number")S.cash=Math.max(0,S.cash+d2.add);
+   else if(typeof d2.set==="number"){S.cash=Math.max(0,d2.set);S.hold={}}
+   save();pushNow(true);render()},function(){});
+  DB.collection("gifts").onSnapshot(function(s){
+   S.got=S.got||[];S.inbox=S.inbox||[];var ch=false;
+   s.docs.forEach(function(q){var d=q.data()||{};if(d.to!==UID||S.got.indexOf(q.id)>=0||!(+d.a>0))return;
+    S.got.push(q.id);if(S.got.length>300)S.got.shift();S.cash+=+d.a;S.inbox.unshift({w:String(d.fn||"?").slice(0,16),a:+d.a});S.inbox=S.inbox.slice(0,10);ch=true;
+    DB.doc("gifts/"+q.id).delete().catch(function(){})});
+   if(ch){save();pushNow(true);var ae=document.activeElement;if(!down&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()}},function(){});
+  DB.collection("admins").onSnapshot(function(s){
+   AL=s.docs.map(function(q){var x=Object.assign({},q.data()||{});x.id=q.id;return x});
+   var me=AL.filter(function(x){return x.id===UID})[0];if(me&&me.revoked&&S.admin){S.admin=false;MSG="Admin huquqingiz olib tashlandi.";save()}
+   var ae=document.activeElement;if(!down&&!AD&&!(ae&&/^(INPUT|SELECT)$/.test(ae.tagName)))render()},function(){});
+  regAdmin();
+  pushNow(true);setInterval(pushNow,8000);render()})}).catch(function(){});
+for(var pk in S.pp)unpump(pk);
+render();
+</script>
+</body>
+</html>
